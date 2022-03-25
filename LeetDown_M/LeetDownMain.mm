@@ -965,6 +965,7 @@ NSString *oldECID = NULL;
                                         [self -> _uselessIndicator stopAnimation:nil];
                                         [self updateStatus:@"Failed to restore device" color:[NSColor redColor]];
                                     });
+                                    [self startApp];
                                 }
                                 return;
                             }
@@ -982,6 +983,7 @@ NSString *oldECID = NULL;
                                     [self -> _uselessIndicator stopAnimation:nil];
                                     [self updateStatus:@"Failed to restore device" color:[NSColor redColor]];
                                 });
+                                [self startApp];
                             }
                             });
                         }];
@@ -1045,11 +1047,8 @@ bool dryRun = true;
      NSString *pathForLog = [documentsDirectory stringByAppendingPathComponent:@".txt"];
      freopen([pathForLog cStringUsingEncoding:NSASCIIStringEncoding],"a+",stdout);
 }
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    cleanUp();
+-(void)startApp {
+     cleanUp();
     
     _versionLabel.enabled = false;
     _versionLabel.alphaValue = 0;
@@ -1070,6 +1069,12 @@ bool dryRun = true;
             self -> _dfuhelpoutlet.alphaValue = 0;
         });
     });
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self startApp];
+
 }
 
 - (void)setRepresentedObject:(id)representedObject {

@@ -415,11 +415,16 @@ DFUDevice *dfuDevPtr = new DFUDevice; // initialize it with defualt constructor 
     dispatch_async(dispatch_get_main_queue(), ^{
         [self updateStatus:[NSString stringWithFormat:@"Sending %@", filename] color:[NSColor greenColor]];
     });
-    
-    if (dfuDevPtr -> sendFile(filename.UTF8String, reconnect) == 0) {
+    int ret = dfuDevPtr -> sendFile(filename.UTF8String, reconnect);
+    if (ret == 0) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self updateStatus:[NSString stringWithFormat:@"Successfully booted %@", filename] color:[NSColor cyanColor]];
             [self updateStatus:@"5 second cooldown, re-plug now if needed on Apple Silicon" color:[NSColor whiteColor]];
+        });
+        return;
+    } else if(ret == 2) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+          [self updateStatus:@"Failed to reset device state" color:[NSColor redColor]];
         });
         return;
     }
